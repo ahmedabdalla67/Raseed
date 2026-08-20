@@ -1,22 +1,11 @@
-import { Category } from "../../Entities/CategoryEntities/Category";
+import { IBudgetRepo } from "../../Repos/IBudgetRepo";
 import { ICategoryRepo } from "../../Repos/ICategoryRepo";
 
-export class CategoryUseCase {
-  constructor(private categoryRepo: ICategoryRepo) { }
-  
-  async getAll() {
-    return await this.categoryRepo.getAll();
-  }
-
-  async save(category: Category) {
-    return await this.categoryRepo.save(category);
-  }
-
-  async update(id: string, category: Category) {
-    return await this.categoryRepo.update(id, category);
-  }
+export class DeleteCategoryUseCase {
+  constructor(private categoryRepo: ICategoryRepo, private budgetRepo: IBudgetRepo) { }
 
   async delete(id: string) {
+    await this.budgetRepo.delete(id);
     return await this.categoryRepo.delete(id);
   }
 }
