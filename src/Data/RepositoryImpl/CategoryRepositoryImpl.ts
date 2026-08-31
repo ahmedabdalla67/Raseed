@@ -19,11 +19,9 @@ export class CategoryRepositoryImpl implements ICategoryRepo {
     async update(id: string, category: Category): Promise<void> {
         const storedCategories = await this.dataSource.getItem(StorageKeys.categories);
         const categories: Category[] = storedCategories ? JSON.parse(storedCategories) : [];
-        categories.filter((c) => {
-            if (c.id === id) {
-                categories.push(category);
-            }
-        });
+        const index = categories.findIndex(c => c.id === id);
+        if (index === -1) return;
+        categories[index] = category;
         return await this.dataSource.storeItem(StorageKeys.categories, JSON.stringify(categories));
     }
     async delete(id: string): Promise<void> {
