@@ -24,7 +24,7 @@ export class TransactionRepositoryImpl implements ITransactionRepository {
         const transctions: Transaction[] = storedTransactions ? JSON.parse(storedTransactions) : [];
         return transctions.filter((transaction) => {
             const extractedYearAndMonth = transaction.date.split("-", 2);
-            return extractedYearAndMonth[0] === String(year).padStart(2, "0") && extractedYearAndMonth[1] === String(month);
+            return extractedYearAndMonth[0] === String(year) && extractedYearAndMonth[1] === String(month).padStart(2, "0");
         });
     }
     // load → filter out deleted item → save back
