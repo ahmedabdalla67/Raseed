@@ -14,13 +14,24 @@ export class BudgetRepositoryImpl implements IBudgetRepo {
             return extractedYearAndMonth[0] === String(year) && extractedYearAndMonth[1] === String(month).padStart(2, "0");
         })
     }
-    save(budgetLimit: CategoryBudgetLimit): Promise<void> {
-        throw new Error("Method not implemented.");
+    async save(budgetLimit: CategoryBudgetLimit): Promise<void> {
+        const storedBudgets = await this.dataSource.getItem(StorageKeys.budgets);
+        const budgets: CategoryBudgetLimit[] = storedBudgets ? JSON.parse(storedBudgets) : [];
+        budgets.push(budgetLimit);
+        return await this.dataSource.storeItem(StorageKeys.budgets, JSON.stringify(budgets));
     }
-    update(id: string, budgetLimit: CategoryBudgetLimit): Promise<void> {
-        throw new Error("Method not implemented.");
+    async update(id: string, budgetLimit: CategoryBudgetLimit): Promise<void> {
+        const storedBudgets = await this.dataSource.getItem(StorageKeys.budgets);
+        const budgets: CategoryBudgetLimit[] = storedBudgets ? JSON.parse(storedBudgets) : [];
+        const index = budgets.findIndex(budget => budget.id === id);
+        if (index === -1) return;
+        budgets[index] == budgetLimit;
+        return await this.dataSource.storeItem(StorageKeys.budgets, JSON.stringify(budgets));
     }
-    delete(categoryId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(categoryId: string): Promise<void> {
+        const storedBudgets = await this.dataSource.getItem(StorageKeys.budgets);
+        const budgets: CategoryBudgetLimit[] = storedBudgets ? JSON.parse(storedBudgets) : [];
+        const filtered = budgets.filter(budget => budget.categoryId !== categoryId);
+        await this.dataSource.storeItem(StorageKeys.budgets, JSON.stringify(filtered));
     }
 }
